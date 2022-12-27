@@ -102,6 +102,10 @@ M.compile = async.void(function(opts)
       })
     end
 
+    if not lang then
+      return
+    end
+
     -- Choose compiler
     local compilers = rest.compilers_get(lang.id)
     compiler = vim_select(compilers, {
@@ -110,6 +114,10 @@ M.compile = async.void(function(opts)
         return item.name
       end,
     })
+
+    if not compiler then
+      return
+    end
 
     -- Choose compiler options
     local compiler_flags = ""
