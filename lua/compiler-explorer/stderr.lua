@@ -41,13 +41,15 @@ M.add_diagnostics = function(stderr, bufnr, offset)
     end
   end
 
-  diagnostic.reset(ns)
-  diagnostic.set(ns, bufnr, diagnostics, conf.diagnostics)
-  diagnostic.setqflist({
-    namespace = ns,
-    open = conf.open_qflist,
-    title = "Compiler Explorer",
-  })
+  if #diagnostics > 0 then
+    diagnostic.reset(ns)
+    diagnostic.set(ns, bufnr, diagnostics, conf.diagnostics)
+    diagnostic.setqflist({
+      namespace = ns,
+      open = conf.open_qflist,
+      title = "Compiler Explorer",
+    })
+  end
 end
 
 return M
