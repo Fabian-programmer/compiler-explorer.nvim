@@ -15,6 +15,34 @@ local get_input = function()
   return async.wrap(vim.ui.input, 2)
 end
 
+local parse_compile_commands = function()
+  local conf = config.get_config()
+  local arguments = ""
+
+  local buf_path = fn.expand("%:p:h")
+  local git_root = io.popen("cd " .. buf_path .. " && git rev-parse --show-toplevel"):read("*all"):sub(1, -2)
+  local compile_commands_filepath = git_root .. "/" .. conf.compile_commands_folder .. "/" .. "compile_commands.json"
+
+  local file = io.open(compile_commands_filepath, "r")
+
+  if file ~= nil then
+    for line in file:lines() do
+      if string.find(line, fn.expand("%:p")) and string.find(line, "command") then
+        local words = vim.fn.split(line)
+
+        -- the compile flags are located between words[3:-4]
+        -- "command": "/usr/bin/c++  -g -o CMakeFiles/hello.dir/hello.cpp.o -c /home/fabian/hello/hello.cpp",
+        for i = 3, #words - 4 do
+          arguments = arguments .. words[i] .. " "
+        end
+        break
+      end
+    end
+    file:close()
+  end
+  return arguments
+end
+
 M.setup = function(user_config)
   config.setup(user_config or {})
 end
@@ -84,7 +112,14 @@ M.compile = async.void(function(opts)
     })
 
     -- Choose compiler options
-    args.flags = vim_input({ prompt = "Select compiler options> ", default = conf.compiler_flags })
+    local compiler_flags = ""
+    if conf.use_compile_commands then
+      compiler_flags = parse_compile_commands()
+    else
+        compiler_flags = conf.compiler_flags
+    end
+
+    args.flags = vim_input({ prompt = "Select compiler options> ", default = compiler_flags })
     args.compiler = compiler.id
   end
 

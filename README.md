@@ -113,6 +113,8 @@ require("compiler-explorer").setup({
   spinner_frames = { "⣼", "⣹", "⢻", "⠿", "⡟", "⣏", "⣧", "⣶" }, -- Compiling... spinner settings.
   spinner_interval = 100,
   compiler_flags = "", -- Default flags passed to the compiler.
+  use_compile_commands = true,
+  compile_commands_folder = "build",
   job_timeout = 25000, -- Timeout for libuv job in milliseconds.
 })
 ```
