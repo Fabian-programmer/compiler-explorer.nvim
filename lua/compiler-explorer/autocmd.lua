@@ -1,16 +1,11 @@
 local config = require("compiler-explorer.config")
 
 local api, fn = vim.api, vim.fn
-local hi = vim.highlight
 
 local M = {}
 
 local function highlight_line(bufnr, linenr, ns, higroup)
-  if fn.has("nvim-0.8") then
-    hi.range(bufnr, ns, higroup, { linenr, 0 }, { linenr, 3000 }, { inclusive = true, regtype = "linewise" })
-  else
-    hi.range(bufnr, ns, higroup, { linenr, 0 }, { linenr, -1 }, "linewise", true)
-  end
+  vim.api.nvim_buf_add_highlight(bufnr, ns, higroup, linenr, 0, -1)
 end
 
 local function create_linehl_dict(asm, offset)

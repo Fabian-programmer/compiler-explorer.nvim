@@ -102,7 +102,7 @@ require("compiler-explorer").setup({
   binary_hl = "Comment", -- Highlight group for binary extmarks/virtual text.
   autocmd = {
     enable = false, -- Enable assembly to source and source to assembly highlighting.
-    hl = "Cursorline", -- Highlight group used for line match highlighting.
+    hl = "Cursor", -- Highlight group used for line match highlighting.
   },
   diagnostics = { -- vim.diagnostic.config() options for the ce-diagnostics namespace.
     underline = false,
