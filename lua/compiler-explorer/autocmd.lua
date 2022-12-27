@@ -16,7 +16,12 @@ end
 local function create_linehl_dict(asm, offset)
   local source_to_asm, asm_to_source = {}, {}
   for asm_idx, line_obj in ipairs(asm) do
-    if line_obj.source ~= vim.NIL and line_obj.source.line ~= vim.NIL then
+    if line_obj.source == vim.NIL then
+      -- continue
+    else
+      local isLineInBuffer = line_obj.source.file == vim.NIL
+      if line_obj.source.line ~= vim.NIL and isLineInBuffer then
+
       local source_idx = line_obj.source.line + offset
       if source_to_asm[source_idx] == nil then
         source_to_asm[source_idx] = {}
@@ -24,6 +29,7 @@ local function create_linehl_dict(asm, offset)
 
       table.insert(source_to_asm[source_idx], asm_idx)
       asm_to_source[asm_idx] = source_idx
+      end
     end
   end
 
@@ -41,6 +47,7 @@ M.create_autocmd = function(source_bufnr, asm_bufnr, resp, offset)
   local gid = api.nvim_create_augroup("CompilerExplorer" .. asm_bufnr, { clear = true })
   local ns = api.nvim_create_namespace("ce-autocmds")
 
+  -- asm buffer
   api.nvim_create_autocmd({ "CursorMoved" }, {
     group = gid,
     buffer = source_bufnr,
@@ -66,6 +73,7 @@ M.create_autocmd = function(source_bufnr, asm_bufnr, resp, offset)
     end,
   })
 
+  -- source buffer
   api.nvim_create_autocmd({ "CursorMoved" }, {
     group = gid,
     buffer = asm_bufnr,
@@ -79,7 +87,7 @@ M.create_autocmd = function(source_bufnr, asm_bufnr, resp, offset)
 
       local line_nr = fn.line(".")
       local hl = asm_to_source[line_nr]
-      if hl then
+      if hl and hl - 1 then
         highlight_line(source_bufnr, hl - 1, ns, hl_group)
 
         local winid = fn.bufwinid(source_bufnr)
