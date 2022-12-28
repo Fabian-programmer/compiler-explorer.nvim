@@ -31,6 +31,27 @@ local function create_linehl_dict(asm, offset)
   return source_to_asm, asm_to_source
 end
 
+local function get_median(list)
+  local len = #list
+
+  -- if the length is odd, return the middle element
+  if len % 2 == 1 then
+    return list[(len + 1) / 2]
+  end
+
+  -- if the length is even, return the neighbour of the middle element
+  return list[len / 2]
+end
+
+local function center_line(winid, line)
+    local current_windid = vim.api.nvim_get_current_win()
+
+    vim.api.nvim_set_current_win(winid)
+    vim.api.nvim_win_set_cursor(winid, {line, 0})
+    vim.cmd('norm! zz')
+    vim.api.nvim_set_current_win(current_windid)
+end
+
 M.create_autocmd = function(source_bufnr, asm_bufnr, resp, offset)
   local source_to_asm, asm_to_source = create_linehl_dict(resp, offset)
   if vim.tbl_isempty(source_to_asm) or vim.tbl_isempty(asm_to_source) then
@@ -60,9 +81,12 @@ M.create_autocmd = function(source_bufnr, asm_bufnr, resp, offset)
         for _, hl in ipairs(hl_list) do
           highlight_line(asm_bufnr, hl - 1, ns, hl_group)
         end
+      end
+
+      if conf.auto_scroll == "both" or conf.auto_scroll == "asm" then
         local winid = fn.bufwinid(asm_bufnr)
-        if winid ~= -1 then
-          api.nvim_win_set_cursor(winid, { hl_list[1], 0 })
+        if winid ~= -1 and hl_list ~= nil then
+          center_line(winid, get_median(hl_list))
         end
       end
     end,
@@ -82,12 +106,17 @@ M.create_autocmd = function(source_bufnr, asm_bufnr, resp, offset)
 
       local line_nr = fn.line(".")
       local hl = asm_to_source[line_nr]
-      if hl and hl - 1 then
-        highlight_line(source_bufnr, hl - 1, ns, hl_group)
 
+      if hl == nil or hl-1 == nil then
+        return
+      end
+
+      highlight_line(source_bufnr, hl - 1, ns, hl_group)
+
+      if conf.auto_scroll == "both" or conf.auto_scroll == "source" then
         local winid = fn.bufwinid(source_bufnr)
         if winid ~= -1 then
-          api.nvim_win_set_cursor(winid, { hl, 0 })
+          center_line(winid, hl)
         end
       end
     end,
