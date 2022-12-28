@@ -5,20 +5,11 @@ local api = vim.api
 
 local M = {}
 
--- Creates a new buffer and window or uses the previous one.
-function M.create_window_buffer(source_bufnr, compiler_id, new_window)
+-- Creates a new buffer and window
+function M.create_window_buffer(compiler_id)
   local conf = config.get_config()
 
-  local clientstate = require("compiler-explorer.clientstate")
-  local winid = clientstate.get_last_bufwinid(source_bufnr)
-  if winid == nil then
-    vim.cmd("vsplit")
-  else
-    api.nvim_set_current_win(winid)
-    if new_window then
-      vim.cmd(conf.split)
-    end
-  end
+  vim.cmd(conf.split)
 
   local asm_bufnr = api.nvim_create_buf(false, true)
   local name = "compiler-explorer://" .. compiler_id .. "-" .. math.random(100)

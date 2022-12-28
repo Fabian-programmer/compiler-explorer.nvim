@@ -1,7 +1,7 @@
 local M = {}
 
 M.defaults = {
-  url = "https://godbolt.org",
+  url = "https://localhost:10240",
   open_qflist = true,
   infer_lang = true, -- Try to infer possible language based on file extension.
   binary_hl = "Comment",
@@ -14,7 +14,7 @@ M.defaults = {
     virtual_text = false,
     signs = false,
   },
-  split = "split", -- How to split the window after the second compile (split/vsplit).
+  split = "vsplit", -- How to split the window after compile (split/vsplit).
   spinner_frames = { "⣼", "⣹", "⢻", "⠿", "⡟", "⣏", "⣧", "⣶" },
   spinner_interval = 100,
   compiler_flags = "",
