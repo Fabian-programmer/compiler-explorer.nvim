@@ -96,7 +96,7 @@ through the `setup()` function. You can find all the options
 
 ```lua
 require("compiler-explorer").setup({
-  url = "https://godbolt.org",
+  url = "http://localhost:10240",
   open_qflist = false, -- Open qflist after compile.
   infer_lang = true, -- Try to infer possible language based on file extension.
   binary_hl = "Comment", -- Highlight group for binary extmarks/virtual text.

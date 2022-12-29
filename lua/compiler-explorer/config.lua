@@ -1,7 +1,7 @@
 local M = {}
 
 M.defaults = {
-  url = "https://localhost:10240",
+  url = "http://localhost:10240",
   auto_scroll = "both", -- (none, both, source, asm)
   open_qflist = true,
   infer_lang = true, -- Try to infer possible language based on file extension.
