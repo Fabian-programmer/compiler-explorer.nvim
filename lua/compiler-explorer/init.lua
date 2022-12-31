@@ -27,7 +27,7 @@ local parse_compile_commands = function()
 
   if file ~= nil then
     for line in file:lines() do
-      if string.find(line, fn.expand("%:p")) and string.find(line, "command") then
+      if string.find(line, fn.expand("%:p"), 1, true) and string.find(line, "command", 1, true) then
         local words = vim.fn.split(line)
 
         -- the compile flags are located between words[3:-4]
@@ -124,7 +124,7 @@ M.compile = async.void(function(opts)
     if conf.use_compile_commands then
       compiler_flags = parse_compile_commands()
     else
-        compiler_flags = conf.compiler_flags
+      compiler_flags = conf.compiler_flags
     end
 
     args.flags = vim_input({ prompt = "Select compiler options> ", default = compiler_flags })
