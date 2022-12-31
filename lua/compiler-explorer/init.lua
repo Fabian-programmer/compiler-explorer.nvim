@@ -20,6 +20,8 @@ local parse_compile_commands = function()
   local arguments = ""
 
   local buf_path = fn.expand("%:p:h")
+  -- always include current buffer path, ce is not aware of that unlike gcc
+  arguments = "-I" .. buf_path .. " "
   local git_root = io.popen("cd " .. buf_path .. " && git rev-parse --show-toplevel"):read("*all"):sub(1, -2)
   local compile_commands_filepath = git_root .. "/" .. conf.compile_commands_folder .. "/" .. "compile_commands.json"
 
