@@ -1,6 +1,8 @@
 # compiler-explorer.nvim
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+The difference to the original is, that fork as a dirty implementation for local compiler-explorer instances and compile_commands.json parsing.
+
 Compile your code and explore assembly from Neovim using the
 [compiler-explorer](https://godbolt.org/) REST API. Supercharged by `vim.ui`,
 `vim.notify` and `vim.diagnostic`.
