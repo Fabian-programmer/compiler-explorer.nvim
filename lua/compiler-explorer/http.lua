@@ -49,6 +49,8 @@ M.post = async.void(function(url, body)
     "-X",
     "POST",
     "-H",
+    "Expect:",
+    "-H",
     "Accept: application/json",
     "-H",
     "Content-Type: application/json",
